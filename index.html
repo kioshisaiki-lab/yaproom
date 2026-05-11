@@ -982,7 +982,15 @@
       const btn = document.createElement('button');
       btn.className = 'emoji-btn';
       btn.textContent = emoji;
-      btn.addEventListener('click', () => { toggleReaction(msgId, emoji); closeActivePicker(); });
+
+      // Use pointerdown so the reaction fires before touchend closes the picker
+      btn.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        toggleReaction(msgId, emoji);
+        // Small delay so the chip animation is visible before closing
+        setTimeout(closeActivePicker, 80);
+      });
+
       picker.appendChild(btn);
     });
     const row  = bubbleEl.closest('.msg-row');
